@@ -60,6 +60,36 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return mysql.connector.connect(
             user=user,
             host=host,
-            pwd=pwd,
+            passwd=pwd,
             port=3306,
             db=db)
+
+
+def main():
+    """This displays the data from the database in a redacted format"""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users")
+    rows = cursor.fetchall()
+    logger = get_logger()
+    fields = "name,email,phone,ssn,password,ip,last_login,user_agent"
+    columns = fields.split(',')
+    for row in rows:
+        record = map(
+                lambda x: '{}={}'.format(x[0], x[1]),
+                zip(columns, row),
+            )
+        msg = '{};'.format('; '.join(list(record)))
+        # print(msg)
+        log_record = logging.LogRecord("user_data", logging.INFO, None,
+                                        None, msg, None, None)
+        formatter = RedactingFormatter(PII_FIELDS)
+        formatter.FORMAT = "[HOLBERTON] user_data %(levelname)s %(asctime)-15s: %(message)s"
+        # logger.handle(formatter.format(log_record))
+        print(formatter.format(log_record))
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    main2()
