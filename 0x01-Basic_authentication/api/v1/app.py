@@ -52,7 +52,7 @@ def filtering():
     auth_path = ['/api/v1/status/', '/api/v1/unauthorized/',
                  '/api/v1/forbidden/']
     res = auth.require_auth(request.path, auth_path)
-    if res == False:
+    if res is False:
         return
     if auth.authorization_header(request) is None:
         abort(401)
