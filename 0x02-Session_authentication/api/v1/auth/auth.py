@@ -17,6 +17,8 @@ class Auth():
 
         if path and path not in excluded_paths:
             return True
+        if path is None:
+            return True
         if excluded_paths is None or excluded_paths == []:
             return True
         if path and path in excluded_paths:
@@ -28,7 +30,10 @@ class Auth():
         if request is None:
             return None
 
-        return request.headers.get('Authorization', None)
+        authKey = request.headers.get('Authorization')
+        if authKey is None:
+            return None
+        return authKey
 
     def current_user(self, request=None) -> TypeVar('User'):
         """This returns None"""
@@ -40,4 +45,4 @@ class Auth():
         if request is None:
             return None
         _my_session_id = getenv('SESSION_NAME')
-        return request.cookies.get(_my_session_id, None)
+        return request.cookies.get(_my_session_id)
