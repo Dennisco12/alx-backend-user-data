@@ -15,11 +15,11 @@ class Auth():
         if path and path[-1] != '/':
             path += '/'
 
+        if path is None or excluded_paths is None:
+            return True
+        if excluded_paths == []:
+            return True
         if path and path not in excluded_paths:
-            return True
-        if path is None:
-            return True
-        if excluded_paths is None or excluded_paths == []:
             return True
         if path and path in excluded_paths:
             return False
@@ -30,10 +30,7 @@ class Auth():
         if request is None:
             return None
 
-        authKey = request.headers.get('Authorization')
-        if authKey is None:
-            return None
-        return authKey
+        return request.headers.get('Authorization', None)
 
     def current_user(self, request=None) -> TypeVar('User'):
         """This returns None"""
