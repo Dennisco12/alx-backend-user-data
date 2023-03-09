@@ -60,13 +60,10 @@ class BasicAuth(Auth):
         and password
         """
         if user_email is None or not isinstance(user_email, str):
-            print("Mail not str")
             return None
         if user_pwd is None or not isinstance(user_pwd, str):
-            print("pwd not str")
             return None
         if not user_pwd:
-            print("no pwd")
             return None
         credential = {"email": user_email}
         try:
